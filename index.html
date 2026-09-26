@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChromaClock</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css" />
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+
+    <!-- Securely load the Python file to bypass Live Server injection errors -->
+    <py-config>
+        [[fetch]]
+        files = ["./main.py"]
+    </py-config>
+</head>
+<body class="theme-dark clock-standard">
+
+    <div class="app-frame">
+        
+        <!-- Top Navigation & 3-Dot Menu -->
+        <header class="top-header">
+            <h1 class="app-title">ChromaClock</h1>
+            <div class="menu-wrapper">
+                <button class="three-dots-btn" py-click="main.toggle_menu">⋮</button>
+                <div id="settingsMenu" class="dropdown-menu">
+                    <h3>Settings</h3>
+                    
+                    <div class="setting-group">
+                        <label>Theme</label>
+                        <div class="btn-row">
+                            <button class="setting-btn" py-click="main.set_light_theme">Light</button>
+                            <button class="setting-btn" py-click="main.set_dark_theme">Dark</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Clock Style</label>
+                        <select id="clockStyleSelect" class="setting-select" py-change="main.change_clock_style">
+                            <option value="standard">Standard</option>
+                            <option value="digital">Digital LED</option>
+                            <option value="minimal">Minimal</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Regional Time</label>
+                        <select id="regionSelect" class="setting-select" py-change="main.change_region">
+                            <option value="local">Local Time</option>
+                            <option value="en-US,America/New_York">New York (EST)</option>
+                            <option value="en-GB,Europe/London">London (GMT)</option>
+                            <option value="ja-JP,Asia/Tokyo">Tokyo (JST)</option>
+                            <option value="en-IN,Asia/Kolkata">India (IST)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Current Live Time Display -->
+        <div class="live-clock-container">
+            <div id="liveClockDisplay">00:00:00</div>
+            <div id="liveDateDisplay" class="live-date">Loading date...</div>
+        </div>
+
+        <!-- Main Content Area (Tabs) -->
+        <div class="content-area">
+            
+            <!-- ALARM TAB -->
+            <div id="tabAlarm" class="tab-content active">
+                <div id="alarmList" class="alarm-list">
+                    <!-- Alarms injected by Python -->
+                </div>
+                <button class="fab" py-click="main.open_add_alarm">+</button>
+            </div>
+
+            <!-- STOPWATCH TAB -->
+            <div id="tabStopwatch" class="tab-content">
+                <div class="stopwatch-display" id="stopwatchTime">00:00:00.00</div>
+                <div class="stopwatch-controls">
+                    <button class="sw-btn sw-start" id="swToggleBtn" py-click="main.toggle_stopwatch">Start</button>
+                    <button class="sw-btn sw-reset" py-click="main.reset_stopwatch">Reset</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Add Alarm Modal -->
+        <div id="alarmModal" class="modal-overlay">
+            <div class="modal-card">
+                <h2>Add New Alarm</h2>
+                <input type="time" id="newAlarmTime" value="07:00">
+                <input type="text" id="newAlarmLabel" placeholder="Alarm Label (e.g., Meeting)">
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" py-click="main.close_add_alarm">Cancel</button>
+                    <button class="modal-btn save" py-click="main.save_alarm">Save Alarm</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Buttons -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-target="tabAlarm" py-click="main.switch_tab">
+                <span class="nav-icon">⏰</span>
+                <span class="nav-label">Alarms</span>
+            </button>
+            <button class="nav-btn" data-target="tabStopwatch" py-click="main.switch_tab">
+                <span class="nav-icon">⏱️</span>
+                <span class="nav-label">Stopwatch</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- Make the main.py module available to the py-click attributes -->
+    <script type="py">
+        import main
+    </script>
+
+</body>
+</html>

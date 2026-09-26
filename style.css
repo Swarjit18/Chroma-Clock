@@ -1,0 +1,204 @@
+/* --- Variables & Theming --- */
+:root {
+    --font-main: 'Nunito', sans-serif;
+    --font-digital: 'Orbitron', sans-serif;
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+body.theme-dark {
+    --bg-app: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    --surface: rgba(255, 255, 255, 0.08);
+    --surface-hover: rgba(255, 255, 255, 0.15);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent: #8b5cf6;
+    --accent-glow: rgba(139, 92, 246, 0.5);
+    --danger: #ef4444;
+    --success: #10b981;
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-light {
+    --bg-app: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #a1c4fd 100%);
+    --surface: rgba(255, 255, 255, 0.65);
+    --surface-hover: rgba(255, 255, 255, 0.9);
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --accent: #ff4757;
+    --accent-glow: rgba(255, 71, 87, 0.5);
+    --danger: #ff4757;
+    --success: #2ed573;
+    --border: rgba(255, 255, 255, 0.4);
+}
+
+/* --- Base Setup --- */
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { 
+    background: #111; display: flex; justify-content: center; 
+    align-items: center; min-height: 100vh; font-family: var(--font-main); 
+}
+button { cursor: pointer; border: none; outline: none; font-family: var(--font-main); transition: var(--transition); }
+
+/* --- App Frame --- */
+.app-frame {
+    width: 400px; height: 800px; background: var(--bg-app); 
+    border-radius: 40px; border: 12px solid #222; overflow: hidden;
+    position: relative; display: flex; flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6); color: var(--text-primary);
+}
+
+/* --- Top Header & 3-Dot Menu --- */
+.top-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 30px 25px 15px 25px; position: relative; z-index: 50;
+}
+.app-title { font-size: 1.5em; font-weight: 800; letter-spacing: 0.5px; }
+
+.menu-wrapper { position: relative; }
+.three-dots-btn {
+    background: transparent; color: var(--text-primary); font-size: 1.8em; 
+    padding: 5px 15px; border-radius: 50%; font-weight: bold;
+}
+.three-dots-btn:hover { background: var(--surface); }
+
+.dropdown-menu {
+    position: absolute; top: 50px; right: 0; background: var(--surface);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border); border-radius: 20px; width: 220px;
+    padding: 20px; opacity: 0; pointer-events: none; transform: translateY(-10px);
+    transition: var(--transition); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.dropdown-menu.show { opacity: 1; pointer-events: all; transform: translateY(0); }
+.dropdown-menu h3 { margin-bottom: 15px; font-size: 1.1em; color: var(--accent); }
+
+.setting-group { margin-bottom: 15px; }
+.setting-group label { display: block; font-size: 0.85em; color: var(--text-secondary); margin-bottom: 5px; font-weight: 600; }
+.btn-row { display: flex; gap: 10px; }
+.setting-btn, .setting-select {
+    flex: 1; background: var(--surface-hover); color: var(--text-primary);
+    border: 1px solid var(--border); padding: 8px; border-radius: 8px;
+    font-weight: 600; width: 100%;
+}
+.setting-btn:active { background: var(--accent); color: white; }
+
+/* --- Live Clock Display --- */
+.live-clock-container {
+    text-align: center; padding: 20px; margin: 10px 20px;
+    background: var(--surface); border-radius: 30px; 
+    border: 1px solid var(--border); backdrop-filter: blur(10px);
+}
+#liveClockDisplay { font-size: 3.2em; font-weight: 700; letter-spacing: 1px; transition: var(--transition); }
+.live-date { font-size: 0.95em; color: var(--text-secondary); font-weight: 600; margin-top: 5px; }
+
+/* Clock Styles Logic */
+body.clock-digital #liveClockDisplay { font-family: var(--font-digital); color: var(--accent); text-shadow: 0 0 15px var(--accent-glow); }
+body.clock-minimal #liveClockDisplay { font-weight: 300; letter-spacing: 3px; font-size: 2.8em; }
+
+/* --- Content Area & Tabs --- */
+.content-area { flex-grow: 1; position: relative; overflow: hidden; }
+.tab-content {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    padding: 10px 20px 100px 20px; overflow-y: auto;
+    opacity: 0; pointer-events: none; transform: translateX(20px); transition: var(--transition);
+}
+.tab-content.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+
+/* --- Alarm UI --- */
+.alarm-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 20px; margin-bottom: 15px;
+    display: flex; justify-content: space-between; align-items: center;
+    backdrop-filter: blur(10px); transition: var(--transition);
+}
+.alarm-card:hover { transform: translateY(-2px); background: var(--surface-hover); }
+
+.alarm-info.dimmed { opacity: 0.5; }
+.alarm-time { font-size: 2.2em; font-weight: 700; margin-bottom: 2px; }
+.alarm-label { font-size: 0.9em; color: var(--text-secondary); font-weight: 600; }
+
+.alarm-actions { display: flex; align-items: center; gap: 15px; }
+.icon-btn { background: rgba(255,255,255,0.1); border-radius: 50%; width: 40px; height: 40px; font-size: 1.2em; }
+.delete-btn { color: var(--danger); }
+.delete-btn:hover { background: var(--danger); color: white; }
+
+/* Custom Toggle */
+.toggle-switch {
+    width: 50px; height: 30px; background: rgba(100,100,100,0.5);
+    border-radius: 30px; position: relative; cursor: pointer; transition: var(--transition);
+}
+.toggle-knob {
+    width: 24px; height: 24px; background: #fff; border-radius: 50%;
+    position: absolute; top: 3px; left: 3px; transition: var(--transition); box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+.toggle-switch.active { background: var(--success); }
+.toggle-switch.active .toggle-knob { transform: translateX(20px); }
+
+/* FAB */
+.fab {
+    position: absolute; bottom: 90px; right: 25px; width: 65px; height: 65px;
+    background: var(--accent); color: white; font-size: 2.5em; font-weight: 300;
+    border-radius: 20px; box-shadow: 0 10px 25px var(--accent-glow); z-index: 10;
+    display: flex; justify-content: center; align-items: center; line-height: 1;
+}
+.fab:active { transform: scale(0.9); }
+
+/* --- Stopwatch UI --- */
+.stopwatch-display {
+    font-family: var(--font-digital); font-size: 3.5em; text-align: center;
+    margin: 60px 0; color: var(--text-primary); text-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+.stopwatch-controls { display: flex; gap: 20px; justify-content: center; }
+.sw-btn {
+    padding: 15px 30px; border-radius: 30px; font-size: 1.1em; font-weight: 700; color: white;
+}
+.sw-start { background: var(--success); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4); }
+.sw-pause { background: var(--accent); box-shadow: 0 8px 20px var(--accent-glow); }
+.sw-reset { background: var(--surface-hover); color: var(--text-primary); border: 1px solid var(--border); }
+
+/* --- Bottom Navigation --- */
+.bottom-nav {
+    display: flex; justify-content: space-around; padding: 15px 10px 25px 10px;
+    background: var(--surface); border-top: 1px solid var(--border);
+    backdrop-filter: blur(20px); position: relative; z-index: 20;
+}
+.nav-btn {
+    background: transparent; display: flex; flex-direction: column; align-items: center;
+    color: var(--text-secondary); gap: 5px; flex: 1;
+}
+.nav-btn.active { color: var(--accent); }
+.nav-icon { font-size: 1.5em; filter: grayscale(1); opacity: 0.6; transition: var(--transition); }
+.nav-btn.active .nav-icon { filter: grayscale(0); opacity: 1; transform: translateY(-3px); }
+.nav-label { font-size: 0.75em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+/* --- Add Alarm Modal --- */
+.modal-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; pointer-events: none; transition: var(--transition); z-index: 100;
+}
+.modal-overlay.show { opacity: 1; pointer-events: all; }
+
+.modal-card {
+    background: var(--bg-app); width: 85%; padding: 30px; border-radius: 30px;
+    border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    transform: translateY(30px) scale(0.95); transition: var(--transition); text-align: center;
+}
+.modal-overlay.show .modal-card { transform: translateY(0) scale(1); }
+
+.modal-card h2 { margin-bottom: 25px; }
+.modal-card input[type="time"] {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 15px;
+    color: var(--text-primary); font-size: 3.5em; font-family: var(--font-main);
+    padding: 10px; width: 100%; margin-bottom: 20px; text-align: center; outline: none;
+}
+.modal-card input[type="text"] {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    color: var(--text-primary); font-size: 1em; padding: 15px; width: 100%; margin-bottom: 30px; outline: none;
+}
+.modal-card input:focus { border-color: var(--accent); }
+
+.modal-buttons { display: flex; gap: 15px; }
+.modal-btn { flex: 1; padding: 15px; border-radius: 15px; font-weight: 700; font-size: 1em; }
+.modal-btn.cancel { background: var(--surface-hover); color: var(--text-primary); border: 1px solid var(--border); }
+.modal-btn.save { background: var(--accent); color: white; box-shadow: 0 5px 15px var(--accent-glow); }
